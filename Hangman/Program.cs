@@ -10,20 +10,29 @@ namespace Hangman
         {
             Methods methods = new Methods();
 
+            bool running = true;
             int wrongCounter = 10;
-            string guessedLetters = "";
+            int rightCounter = 0;
+            StringBuilder guessedLetters = new StringBuilder();
             char[] correctLetters = methods.GetWordFromList();
             char[] wordToReveal = new char[correctLetters.Length];
-            wordToReveal = new StringBuilder().Append('-', correctLetters.Length).ToString().Trim().ToCharArray();
+            wordToReveal = new StringBuilder().Append('_', correctLetters.Length).ToString().Trim().ToCharArray();
 
             WriteLine("Welcome to the Hangman Game!" +
                       "\n" +
                       "\nYou have 10 tries to guess the correct word." +
                       "\n");
-            for(int i = 0; i < (10 + correctLetters.Length); i++)
+            while(running)
             {
-                if(wrongCounter == 0)
+                if(wrongCounter <= 0)
                 {
+                    running = false;
+                    break;
+                }
+                if (rightCounter >= correctLetters.Length)
+                {
+                    WriteLine($"You have guessed all correct letters the word was {string.Concat(correctLetters)}");
+                    ReadKey();
                     break;
                 }
 
@@ -52,9 +61,10 @@ namespace Hangman
                 else if(userInput.Length <= 1)
                 {
                     Clear();
-                    if (methods.GuessLetter(userInput, guessedLetters, out userInput) == true)
+                    if (methods.GuessLetter(userInput, guessedLetters.ToString(), out userInput) == true)
                     {
-                        guessedLetters = guessedLetters + new StringBuilder().Append(userInput + ".");
+                        rightCounter++;
+                        guessedLetters.Append(userInput + ".");
                         for(int j = 0; j < correctLetters.Length; j++)
                         {
                             if (userInput.Contains(correctLetters[j]))
@@ -68,6 +78,7 @@ namespace Hangman
                     else
                     {
                         wrongCounter--;
+                        guessedLetters.Append(userInput + ".");
                         WriteLine("Your guess was wrong");
                         ReadKey();
                     }
