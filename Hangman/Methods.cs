@@ -11,12 +11,12 @@ namespace Hangman
         
         public char[] GetWordFromList()
         {
-            List<string> wordList = new List<string>()
+            string[] wordList = new string[]
             {
                 "lego", "duplo", "hotwheels"
             };
 
-            int rndNum = new Random().Next(0, wordList.Count);
+            int rndNum = new Random().Next(0, wordList.Length);
             correctWord = wordList[rndNum];
 
             return wordList[rndNum].ToCharArray();
